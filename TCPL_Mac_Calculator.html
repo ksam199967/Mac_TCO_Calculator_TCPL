@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mac vs. PC Total Economic Impact | Team Computers</title>
+    <style>
+        :root {
+            --bg-color: #F5F5F7;
+            --card-bg: #FFFFFF;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --accent-color: #0071E3;
+            --accent-hover: #0077ED;
+            --success-color: #00B06B; /* Green for savings */
+            --danger-color: #FF3B30;
+            --border-radius: 18px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.08);
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-stack);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+        }
+
+        /* --- Layout & Header --- */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 16px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo span { color: var(--text-secondary); font-weight: 400; }
+
+        .badge {
+            font-size: 12px;
+            background: #000;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* --- Main Grid --- */
+        main {
+            display: grid;
+            grid-template-columns: 1fr 420px; /* Dashboard layout */
+            gap: 32px;
+            padding: 40px 24px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Input Section --- */
+        .input-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form Controls */
+        .control-group {
+            margin-bottom: 20px;
+        }
+        .control-group:last-child { margin-bottom: 0; }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .range-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]:focus { outline: none; }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #E5E5E5;
+            border-radius: 2px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -8px;
+            border: 0.5px solid rgba(0,0,0,0.1);
+        }
+
+        .number-display {
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: right;
+            color: var(--accent-color);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 16px;
+        }
+        .input-row > div { flex: 1; }
+
+        /* Styled Number Input */
+        input[type=number] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: var(--font-stack);
+            transition: border-color 0.2s;
+        }
+        input[type=number]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* --- Results Panel (Sticky) --- */
+        .results-panel {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .results-card {
+            background: #1D1D1F; /* Dark mode for contrast/premium feel */
+            color: #fff;
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle gradient background for results */
+        .results-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,113,227,0.2) 0%, rgba(29,29,31,0) 70%);
+            pointer-events: none;
+        }
+
+        .total-savings-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #86868B;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .total-savings-amount {
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+            background: linear-gradient(90deg, #fff, #a1a1a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+            position: relative;
+        }
+
+        .metric-box {
+            background: rgba(255,255,255,0.1);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .metric-box span {
+            display: block;
+            font-size: 12px;
+            color: #a1a1a6;
+            margin-bottom: 4px;
+        }
+
+        .metric-box strong {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .metric-positive { color: #30D158 !important; }
+
+        /* Comparison Bars */
+        .comparison-section {
+            margin-top: 32px;
+            text-align: left;
+            position: relative;
+        }
+        
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .bar-container {
+            margin-bottom: 12px;
+        }
+        
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #a1a1a6;
+            margin-bottom: 4px;
+        }
+
+        .bar-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .pc-fill { background-color: #FF3B30; width: 0%; }
+        .mac-fill { background-color: #0071E3; width: 0%; }
+
+        .cta-button {
+            display: block;
+            width: 100%;
+            background: #fff;
+            color: #000;
+            text-align: center;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 32px;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+        .cta-button:hover { background: #f2f2f2; }
+
+        /* SVG Icons */
+        .icon { width: 20px; height: 20px; fill: var(--accent-color); }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container nav-content">
+        <div class="logo">
+            <!-- Simple SVG Apple Logo styled placeholder -->
+            <svg width="20" height="24" viewBox="0 0 17 21" fill="black">
+                <path d="M12.6547 8.92003C12.6253 6.60934 14.6091 5.41853 14.7064 5.36094C13.6297 3.78816 11.973 3.54441 11.3739 3.52088C9.94416 3.37259 8.59409 4.36294 7.86444 4.36294C7.13479 4.36294 6.01438 3.53016 4.84069 3.55463C3.29294 3.5791 1.87163 4.45869 1.07706 5.84369C-0.544156 8.65553 1.85497 15.2999 4.26803 15.2284C5.42766 15.1947 6.26803 14.0782 7.70563 14.0782C9.14322 14.0782 9.88747 15.2275 11.178 15.202C12.5147 15.1765 13.3419 13.9956 14.1556 12.8036C15.118 11.393 15.5206 10.0259 15.5461 9.96216C15.5265 9.95138 12.69 8.85638 12.6547 8.92003ZM10.6491 2.37422C11.2444 1.65528 11.6503 0.662406 11.5377 -0.234062C10.6188 -0.196844 9.51034 0.372125 8.84841 1.16428C8.25213 1.86713 7.81544 2.88753 7.93981 3.77069C8.9475 3.84903 10.0538 3.18816 10.6491 2.37422Z"/>
+            </svg>
+            Team Computers <span>TCO Calculator</span>
+        </div>
+        <div class="badge">Authorized Enterprise Reseller</div>
+    </div>
+</header>
+
+<main>
+    <!-- Left Column: Inputs -->
+    <section class="input-section">
+        <h2>Configuration</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 32px;">Customize the inputs based on your organization's fleet and operational costs to see the 3-year impact.</p>
+
+        <!-- Card 1: Hardware -->
+        <div class="card">
+            <div class="card-title">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M4,6H20V16H4M20,18A2,2 0 0,0 22,16V6C22,4.89 21.1,4 20,4H4C2.89,4 2,4.89 2,6V16A2,2 0 0,0 4,18H0V20H24V18H20Z"></path></svg>
+                Hardware & Lifecycle
+            </div>
+            
+            <div class="control-group">
+                <label>Number of Devices</label>
+                <div class="range-wrapper">
+                    <input type="range" id="deviceCount" min="10" max="1000" step="10" value="100">
+                    <div class="number-display" id="deviceCountDisplay">100</div>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="control-group">
+                    <label>Avg. PC Price (₹)</label>
+                    <input type="number" id="pcPrice" value="85000">
+                </div>
+                <div class="control-group">
+                    <label>Avg. Mac Price (₹)</label>
+                    <input type="number" id="macPrice" value="125000">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Residual Value after 3 Years (%)</label>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #86868B; margin-bottom: 4px;">
+                    <span>PC (Typ. 10%)</span>
+                    <span>Mac (Typ. 30%)</span>
+                </div>
+                <div class="input-row">
+                    <input type="number" id="pcRes" value="10">
+                    <input type="number" id="macRes" value="32">
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Support & Operations -->
+        <div class="card">
+            <div class="card-title">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"></path></svg>
+                IT Operations & Support
+            </div>
+
+            <div class="control-group">
+                <label>PC Support Tickets per Year (per device)</label>
+                <div class="range-wrapper">
+                    <input type="range" id="pcTickets" min="1" max="20" step="1" value="6">
+                    <div class="number-display" id="pcTicketsDisplay">6</div>
+                </div>
+                <p style="font-size: 11px; color: #86868B; margin-top: 4px;">Mac users typically generate 40-60% fewer tickets.</p>
+            </div>
+
+            <div class="control-group">
+                <label>Cost per IT Ticket (₹)</label>
+                <input type="number" id="ticketCost" value="1500">
+            </div>
+
+            <div class="control-group">
+                <label>3-Year Add-on Software Cost (Security/Mgmt) (₹)</label>
+                <div class="input-row">
+                    <div>
+                        <span style="font-size:11px; color:#86868B">PC</span>
+                        <input type="number" id="pcSoft" value="15000">
+                    </div>
+                    <div>
+                        <span style="font-size:11px; color:#86868B">Mac</span>
+                        <input type="number" id="macSoft" value="3000">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Employee Efficiency -->
+        <div class="card">
+            <div class="card-title">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z"></path></svg>
+                Productivity & ROI
+            </div>
+
+            <div class="control-group">
+                <label>Average Annual Employee Salary (₹)</label>
+                <input type="number" id="salary" value="1200000">
+            </div>
+
+            <div class="control-group">
+                <label>Efficiency Gain with Mac (%)</label>
+                <div class="range-wrapper">
+                    <input type="range" id="efficiency" min="0" max="10" step="0.5" value="3.5">
+                    <div class="number-display" id="efficiencyDisplay">3.5%</div>
+                </div>
+                <p style="font-size: 11px; color: #86868B; margin-top: 4px;">Based on Forrester TEI: Faster wake times, battery life, and performance.</p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Right Column: Results -->
+    <aside class="results-panel">
+        <div class="results-card">
+            <div class="total-savings-label">Total 3-Year Savings</div>
+            <div class="total-savings-amount" id="totalSavings">₹ 0</div>
+            
+            <div class="metric-grid">
+                <div class="metric-box">
+                    <span>ROI</span>
+                    <strong id="roiDisplay" class="metric-positive">0%</strong>
+                </div>
+                <div class="metric-box">
+                    <span>Payback Period</span>
+                    <strong id="paybackDisplay">0 Months</strong>
+                </div>
+                <div class="metric-box">
+                    <span>Savings per Device</span>
+                    <strong id="perDeviceSavings">₹ 0</strong>
+                </div>
+                <div class="metric-box">
+                    <span>Operational Savings</span>
+                    <strong id="opSavings">₹ 0</strong>
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <div class="chart-title">3-Year Total Cost (Fleet)</div>
+                
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span>Windows PC</span>
+                        <span id="pcTotalCostDisplay">₹ 0</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill pc-fill" id="pcBar"></div>
+                    </div>
+                </div>
+
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span>Mac</span>
+                        <span id="macTotalCostDisplay">₹ 0</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill mac-fill" id="macBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" onclick="window.print(); return false;" class="cta-button">Export Summary Report</a>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center; font-size: 11px; color: #86868B;">
+            <p>Estimates based on user inputs and Forrester TEI methodology framework.<br>Not a guaranteed offer.</p>
+        </div>
+    </aside>
+</main>
+
+<script>
+    // Helper: Format Currency to Indian Rupee
+    const formatINR = (number) => {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        }).format(number);
+    };
+
+    // Helper: Parse float from input
+    const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+
+    // Main Calculation Function
+    function calculateTCO() {
+        // 1. Get Inputs
+        const deviceCount = getVal('deviceCount');
+        
+        // Hardware
+        const pcPrice = getVal('pcPrice');
+        const macPrice = getVal('macPrice');
+        const pcResPercent = getVal('pcRes') / 100;
+        const macResPercent = getVal('macRes') / 100;
+
+        // Support
+        const pcTickets = getVal('pcTickets');
+        const macTickets = pcTickets * 0.4; // Assume 60% fewer tickets on Mac (Standard TEI metric)
+        const ticketCost = getVal('ticketCost');
+        const pcSoft = getVal('pcSoft');
+        const macSoft = getVal('macSoft');
+
+        // Productivity
+        const salary = getVal('salary');
+        const efficiencyGain = getVal('efficiency') / 100;
+
+        // 2. Calculate Costs (Per Device over 3 Years)
+        
+        // Hardware Cost (Price - Residual)
+        const pcHardwareCost = pcPrice - (pcPrice * pcResPercent);
+        const macHardwareCost = macPrice - (macPrice * macResPercent);
+
+        // Support & Ops Cost (3 Years)
+        const pcSupportCost = (pcTickets * ticketCost * 3) + pcSoft;
+        const macSupportCost = (macTickets * ticketCost * 3) + macSoft;
+
+        // Total Hard Costs (excluding productivity for TCO chart baseline)
+        const pcTotalHardCost = pcHardwareCost + pcSupportCost;
+        const macTotalHardCost = macHardwareCost + macSupportCost;
+
+        // Productivity Benefits (Monetary Value over 3 years)
+        // We treat this as "Negative Cost" or Savings for the Mac side in ROI logic
+        const macProductivitySavings = (salary * efficiencyGain * 3);
+
+        // 3. Fleet Totals
+        const fleetPcCost = pcTotalHardCost * deviceCount;
+        const fleetMacCost = macTotalHardCost * deviceCount;
+        const fleetProductivityGain = macProductivitySavings * deviceCount;
+
+        // 4. Final Savings Calculation
+        // Savings = (PC Cost - Mac Cost) + Productivity Gains
+        // Note: Even if Mac hardware is more expensive, the savings come from support + productivity
+        
+        const hardCostDifference = fleetPcCost - fleetMacCost; // Positive means Mac is cheaper to run
+        const totalSavings = hardCostDifference + fleetProductivityGain;
+        
+        const savingsPerDevice = totalSavings / deviceCount;
+
+        // 5. ROI & Payback
+        // Investment = Extra cost of Mac Hardware upfront (if any) + Setup
+        // Return = Total Savings over 3 years
+        
+        const upfrontGap = (macPrice - pcPrice) * deviceCount;
+        let roi = 0;
+        let paybackMonths = 0;
+
+        if (upfrontGap > 0) {
+            roi = (totalSavings / upfrontGap) * 100;
+            // Payback = (Initial Investment / Annual Savings) * 12
+            const annualSavings = totalSavings / 3;
+            paybackMonths = (upfrontGap / annualSavings) * 12;
+        } else {
+            roi = 999; // Instant ROI if Mac is cheaper or same price (unlikely but possible with residuals)
+            paybackMonths = 0;
+        }
+
+        // 6. Update DOM
+        document.getElementById('totalSavings').innerText = formatINR(totalSavings);
+        document.getElementById('roiDisplay').innerText = roi > 999 ? ">999%" : Math.round(roi) + "%";
+        document.getElementById('paybackDisplay').innerText = paybackMonths <= 0 ? "Immediate" : Math.ceil(paybackMonths) + " Months";
+        document.getElementById('perDeviceSavings').innerText = formatINR(savingsPerDevice);
+        
+        // Operational Savings (Support + Soft costs difference)
+        const opSavings = ((pcSupportCost - macSupportCost) * deviceCount);
+        document.getElementById('opSavings').innerText = formatINR(opSavings);
+
+        // Update Chart Bars
+        // Normalize width based on the higher cost
+        const maxCost = Math.max(fleetPcCost, fleetMacCost);
+        document.getElementById('pcTotalCostDisplay').innerText = formatINR(fleetPcCost);
+        document.getElementById('macTotalCostDisplay').innerText = formatINR(fleetMacCost);
+
+        document.getElementById('pcBar').style.width = (fleetPcCost / maxCost * 100) + "%";
+        document.getElementById('macBar').style.width = (fleetMacCost / maxCost * 100) + "%";
+
+        // Update Range Displays
+        document.getElementById('deviceCountDisplay').innerText = deviceCount;
+        document.getElementById('pcTicketsDisplay').innerText = pcTickets;
+        document.getElementById('efficiencyDisplay').innerText = (efficiencyGain * 100).toFixed(1) + "%";
+    }
+
+    // Event Listeners
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('input', calculateTCO);
+    });
+
+    // Initial Run
+    calculateTCO();
+
+</script>
+
+</body>
+</html>
